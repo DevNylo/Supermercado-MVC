@@ -1,7 +1,5 @@
 # 🛒 Supermercado MVC
 
-![Demonstração do Projeto](URL_DA_SUA_IMAGEM_AQUI)
-
 ## 🚀 Como Usar
 
 Siga os passos abaixo para configurar e executar o projeto localmente.
