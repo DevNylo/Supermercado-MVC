@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Supermarket MVC - Funcionário</title>
+    <link rel="stylesheet" href="/css/funcionario.css">
+    <link rel="stylesheet" href="/css/materialize.css">
+    <link rel="stylesheet" href="/css/modals.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body>
+<header>
+    <menu>
+        <ul>
+            <span><img src="/images/supermarket-logo.png" alt="Logo"></span>
+            <li class="hover"><a href="/index" target="_self"> INÍCIO</a></li>
+            <li class="hover"><a href="/employee" target="_self"> FUNCIONÁRIOS</a></li>
+            <li class="hover"><a href="/products" target="_self">PRODUTOS</a></li>
+            <li class="hover"><a href="/reports" target="_self">RELATÓRIOS</a></li>
+        </ul>
+        <div>
+            <p>Developed by SENAC GRUPO 15</p>
+            <p>Version 1.0.0</p>
+        </div>
+    </menu>
+</header>
+<section>
+    <div>
+        <form action="/employee/search" method="GET">
+            <input type="text" placeholder="Nome ou ID" name="query">
+            <input type="submit" value="Pesquisar">
+        </form>
+        <button id="adicionar">Adicionar</button>
+        <form action="#" th:action="@{/employee}" th:object="${employee}" method="post">
+            <dialog>
+                <div class="container">
+                    <div class="tableContainer">
+                        <div class="form-group">
+                            <label for="nome">Nome Completo:</label>
+                            <input type="text" id="nome" name="nome">
+                        </div>
+                        <div class="form-group">
+                            <label for="cpf">CPF:</label>
+                            <input type="text" id="cpf" name="cpf" placeholder="123.456.789-09">
+                        </div>
+                        <div class="form-group">
+                            <label for="cargo">Cargo:</label>
+                            <input type="text" id="cargo" name="cargo">
+                        </div>
+                        <div class="form-group">
+                            <label for="endereco">Endereço:</label>
+                            <input type="text" id="endereco" name="endereco">
+                        </div>
+                        <div class="form-group">
+                            <label for="data_nascimento">Data de Nascimento:</label>
+                            <input type="text" id="data_nascimento" name="data_nascimento" placeholder="yyyy-MM-dd">
+                        </div>
+
+                    </div>
+                    <div class="tableContainer">
+                        <div class="form-group">
+                            <label for="salario">Salário:</label>
+                            <input type="text" id="salario" name="salario" placeholder="123.00">
+                        </div>
+                        <div class="form-group">
+                            <label for="departamento">Departamento:</label>
+                            <input type="text" id="departamento" name="departamento">
+                        </div>
+                        <div class="form-group">
+                            <label for="horario_trabalho">Horário de Trabalho:</label>
+                            <input type="text" id="horario_trabalho" name="horario_trabalho">
+                        </div>
+                        <div class="form-group">
+                            <label for="data_contratacao">Data de Contratação:</label>
+                            <input type="text" id="data_contratacao" name="data_contratacao" placeholder="yyyy-MM-dd">
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" id="submit">Cadastrar</button>
+                <button type="button" onclick="javascript:window.history.back();" id="fechar">Cancelar</button>
+            </dialog>
+
+        </form>
+    </div>
+    <table>
+        <tr>
+            <th>Controle</th>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Data de Nascimento</th>
+            <th>CPF</th>
+            <th>Salário</th>
+            <th>Cargo</th>
+            <th>Endereço</th>
+            <th>Departamento</th>
+            <th>Data de Contratação</th>
+            <th>Horário de Trabalho</th>
+        </tr>
+        <tr th:each="employee : ${employee}">
+            <td>
+                <img class="user-remove" src="/images/user-remove.svg" alt="Remover usuário" th:attr="data-id=${employee.id}">
+            </td>
+            <td class="employee-id" th:text="${employee.id}"></td>
+            <td class="editable" th:text="${employee.nome}" contenteditable="true"></td>
+            <td class="editable" th:text="${employee.data_nascimento}" contenteditable="true">></td>
+            <td th:text="${employee.cpf}"></td>
+            <td th:text="${employee.salario}"></td>
+            <td th:text="${employee.cargo}"></td>
+            <td th:text="${employee.endereco}"></td>
+            <td th:text="${employee.departamento}"></td>
+            <td th:text="${employee.data_contratacao}"></td>
+            <td th:text="${employee.horario_trabalho}"></td>
+        </tr>
+    </table>
+</section>
+
+
+<script src="/js/script.js"></script>
+<script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll(".user-remove").forEach(button => {
+            button.addEventListener("click", function() {
+                const employeeId = this.getAttribute("data-id");
+
+                if (confirm("Tem certeza que deseja remover este funcionário?")) {
+                    fetch(`/employee/${employeeId}`, {
+                    method: 'DELETE'
+                })
+                .then(response => {
+                if (response.ok) {
+                    location.reload()
+                } else {
+                    alert("Erro ao remover funcionário.");
+                }
+                })
+                .catch(error => {
+                console.error("Erro:", error);
+                alert("Erro ao remover funcionário.");
+                });
+            }
+        });
+    });
+});
+    document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll(".editable").forEach(field => {
+        field.addEventListener("blur", function() {
+            const newValue = this.innerText.trim();
+            const employeeId = this.parentElement.querySelector(".employee-id").innerText.trim();
+
+            // Imprimir os dados antes de enviar a solicitação PATCH
+            console.log("ID do Funcionário:", employeeId);
+            console.log("Novo Nome:", newValue);
+
+            // Aqui você pode fazer uma solicitação AJAX para atualizar o nome do funcionário no backend
+            fetch(`/employee/${employeeId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'text/plain'
+                },
+                body: newValue
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log("Nome do funcionário atualizado com sucesso.");
+                } else {
+                    console.error("Erro ao atualizar nome do funcionário.");
+                }
+            })
+            .catch(error => {
+                console.error("Erro:", error);
+            });
+        });
+
+        field.addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                this.blur();
+            }
+        });
+    });
+});
+</script>
+</body>
+</html>
