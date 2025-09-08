@@ -1,0 +1,38 @@
+
+.relatorio{
+    padding: 30px;
+
+}
+
+.relatorio h1 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.relatorio table {
+    width: 70%;
+    margin: 0 auto;
+    border-collapse: collapse;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+th, td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+th {
+    background: linear-gradient(to top, rgba(210,255,82,1) 0%, rgba(145,232,66,1) 100%);
+    color: #fff;
+}
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+tr:hover {
+    background-color: #f1f1f1;
+}
+@media (max-width: 768px) {
+    table {
+        width: 100%;
+    }
+}
